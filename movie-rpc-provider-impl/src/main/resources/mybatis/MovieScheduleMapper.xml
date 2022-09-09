@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.MovieScheduleMapper">
+
+    <select id="findMovieScheduleList" parameterType="Map" resultType="MovieScheduleVo">
+        SELECT t1.id,t1.screening_hall,t1.begin_time,t1.end_time,t1.seats_total,t1.seats_use_count,t2.duration,t2.fare
+        as price
+        FROM movie_schedule t1,movies t2
+        WHERE t1.movie_id = #{movieId} AND t1.cinemas_id = #{cinemasId} AND t1.movie_id = t2.id
+    </select>
+
+    <select id="findMovieScheduleById" parameterType="int" resultType="MovieSchedule">
+        SELECT id,movie_id,cinemas_id,hall_id,screening_hall,begin_time,end_time,seats_total,seats_use_count,create_time
+        FROM movie_schedule
+        WHERE id = #{id}
+    </select>
+
+    <select id="findCinemasByMovieId" parameterType="int" resultType="int">
+        SELECT cinemas_id FROM movie_schedule WHERE movie_id = #{movieId}
+    </select>
+
+    <select id="findMoviesByCinemaId" parameterType="int" resultType="int">
+        SELECT movie_id FROM movie_schedule WHERE cinemas_id = #{cinemasId}
+    </select>
+
+    <select id="findCinemaScheduleList" resultType="CinemaScheduleVo" parameterType="int">
+        SELECT t2.id movieId,t2.name,t2.image_url,t2.director,t2.starring,t2.score
+        FROM movie_schedule t1,movies t2
+        WHERE t2.id = t1.movie_id and t1.cinemas_id = #{cinemaId}
+        GROUP BY t2.name
+        limit #{index},#{count}
+    </select>
+
+    <select id="findMovieScheduleListV2" resultType="MovieCinemaScheduleVo" parameterType="Map">
+        SELECT t1.id,t1.hall_id,t2.screening_hall,t1.begin_time,t1.end_time,t1.movie_id,t3.fare
+        FROM movie_schedule t1 left join cinema_hall t2 on t1.hall_id = t2.id
+        left join movies t3 on t1.movie_id = t3.id
+        where t1.movie_id = #{movieId} and t1.cinemas_id = #{cinemasId}
+    </select>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.SystemMessagesMapper">
+
+    <select id="findAllSysMsgs" parameterType="int" resultType="SystemMessages">
+        SELECT * FROM system_messages
+        WHERE user_id = #{userId}
+        ORDER BY push_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <insert id="addSysMsgs" parameterType="SystemMessages">
+        INSERT INTO system_messages (user_id, content, title)
+        VALUES (#{userId}, #{content}, #{title})
+    </insert>
+
+    <update id="sysMsgsStatusChange" parameterType="int">
+        UPDATE system_messages SET status=1 WHERE id = #{id}
+    </update>
+
+    <select id="findSysMsgsStatus" parameterType="int" resultType="int">
+        SELECT count(*) FROM system_messages WHERE user_id =#{UserId} AND status = 0
+    </select>
+    <select id="sysMsgStatus" parameterType="int" resultType="int">
+        SELECT status FROM system_messages WHERE id =#{id}
+    </select>
+    <delete id="deleteSysMsgs" parameterType="int">
+        DELETE FROM system_messages WHERE id = #{id}
+    </delete>
+
+</mapper>

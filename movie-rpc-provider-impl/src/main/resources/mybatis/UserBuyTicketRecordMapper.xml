@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.UserBuyTicketRecordMapper">
+
+    <insert id="addUserBuyTicketRecord" parameterType="UserBuyTicketRecord">
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO
+        user_buy_ticket_record(order_id,user_id,movie_name,cinema_name,screening_hall,seat,price,status,amount,begin_time,end_time)
+        VALUES
+        (#{orderId},#{userId},#{movieName},#{cinemaName},#{screeningHall},#{seat},#{price},#{status},#{amount},#{beginTime},#{endTime})
+    </insert>
+
+    <select id="findUserBuyTicketRecordList" parameterType="Map" resultType="UserBuyTicketRecord">
+        SELECT
+        id,order_id,user_id,movie_name,cinema_name,screening_hall,price,seat,status,amount,begin_time,end_time,create_time
+        FROM user_buy_ticket_record
+        WHERE user_id = #{userId}
+        and status = #{status}
+        order by create_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <update id="modifyStatus" parameterType="Map">
+        UPDATE user_buy_ticket_record
+        SET status = #{status}
+        WHERE order_id = #{orderId}
+    </update>
+
+    <select id="findBuyTicketRecordByOrderId" parameterType="String" resultType="UserBuyTicketRecord">
+        SELECT
+        id,order_id,user_id,movie_name,cinema_name,screening_hall,price,seat,status,amount,begin_time,end_time,create_time
+        FROM user_buy_ticket_record
+        WHERE order_id = #{orderId}
+    </select>
+
+    <select id="findUserBuyTicketRecord" parameterType="Map" resultType="UserBuyTicketRecordVo">
+        select t1.id,t1.movie_name,t2.image_url,t1.order_id,t1.create_time,t1.price,t1.amount
+        from user_buy_ticket_record t1, movies t2
+        where t1.movie_name = t2.name and t1.user_id = #{userId} and t1.status = #{status}
+    </select>
+
+
+</mapper>

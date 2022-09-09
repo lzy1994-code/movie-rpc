@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.MovieCommentMapper">
+
+    <select id="findAllMovieComment" parameterType="int" resultType="MovieCommentVo">
+        select t1.id as commentId
+        ,t1.movie_id,t1.comment_userId,t1.comment_content,t1.hot_comment,t1.comment_time,t2.nick_name as
+        commentUserName,t2.head_pic as commentHeadPic
+        from movie_comment t1,user t2
+        where t1.comment_userId=t2.id
+        and movie_id = #{movieId}
+        order by t1.comment_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <insert id="saveMovieComment" parameterType="MovieComment">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into movie_comment (movie_id,comment_userId,comment_content,score,hot_comment,comment_time)
+        values (#{movieId},#{commentUserId},#{commentContent},#{score},#{hotComment},#{commentTime})
+    </insert>
+    <select id="movieCommentTotal" parameterType="int" resultType="int">
+        select count(*) from movie_comment where movie_id = #{movieId}
+    </select>
+    <select id="findCommentById" parameterType="int" resultType="MovieComment">
+        select * from movie_comment where movie_id =#{movieId} and comment_userId = #{commentUserId}
+    </select>
+
+    <select id="findAllMovieCommentById" resultType="MovieCommentVos" parameterType="Map">
+        select t1.id as commentId
+        ,t1.movie_id,t1.comment_userId,t1.comment_content,t1.score,t1.comment_time,t2.nick_name as
+        commentUserName,t2.head_pic as commentHeadPic
+        from movie_comment t1,user t2
+        where t1.comment_userId=t2.id
+        and movie_id = #{movieId}
+        order by t1.comment_time DESC
+        limit #{index},#{count}
+    </select>
+</mapper>

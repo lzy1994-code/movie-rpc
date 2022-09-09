@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.MovieCommentGreatMapper">
+    <select id="getMovieGreatNum" parameterType="int" resultType="int">
+        select count(*) from movie_comment_great where comment_id = #{commentId} and user_id != ""
+    </select>
+    <select id="whetherMovieGreat" resultType="int" parameterType="int">
+        select count(1) from movie_comment_great where comment_id = #{commentId} and user_id = #{userId}
+    </select>
+
+    <insert id="saveMovieCommentGreat" parameterType="MovieCommentGreat">
+        insert into movie_comment_great (comment_id, user_id) values (#{commentId},#{userId})
+    </insert>
+
+</mapper>

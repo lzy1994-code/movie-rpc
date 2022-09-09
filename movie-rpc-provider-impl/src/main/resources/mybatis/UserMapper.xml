@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.UserMapper">
+
+    <insert id="insert" parameterType="User">
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into user (nick_name,phone, pwd, sex,email,head_pic,birthday,last_login_time)
+        values (#{nickName},#{phone}, #{pwd}, #{sex},#{email},#{headPic},#{birthday},now())
+    </insert>
+
+    <select id="login" parameterType="Map" resultType="User">
+        select id,nick_name,phone,sex,birthday,head_pic,last_login_time from user
+        where phone = #{phone} AND pwd = #{pwd}
+    </select>
+
+    <update id="updateLoginTime" parameterType="int">
+        UPDATE user SET last_login_time = now() WHERE id = #{userId}
+    </update>
+
+    <update id="updateUser" parameterType="User">
+        UPDATE user
+        SET
+        <if test="nickName != null and nickName != '' ">
+            nick_name = #{nickName},
+        </if>
+        <if test="phone != null and phone != '' ">
+            phone = #{phone},
+        </if>
+        <if test="pwd != null and pwd != '' ">
+            pwd = #{pwd},
+        </if>
+        <if test="sex > 0">
+            sex = #{sex},
+        </if>
+        <if test="email != null and email != ''">
+            email = #{email},
+        </if>
+        last_login_time = now()
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <select id="findUserByUserId" parameterType="int" resultType="User">
+        select id,nick_name,phone, sex,email,birthday,head_pic,last_login_time from user
+        where id = #{userId}
+    </select>
+
+    <update id="updateUserHeadPic" parameterType="Map">
+        UPDATE user
+        SET head_pic = #{headPic}
+        WHERE id = #{userId}
+    </update>
+
+    <update id="updateUserPwd" parameterType="Map">
+        UPDATE user
+        SET pwd = #{newPwd}
+        WHERE id = #{userId} AND pwd = #{oldPwd}
+    </update>
+
+    <select id="checkPhone" parameterType="String" resultType="int">
+        SELECT count(1) FROM user WHERE phone = #{phone}
+    </select>
+
+    <select id="checkNickName" parameterType="String" resultType="int">
+        SELECT count(1) FROM user WHERE nick_name = #{nickName}
+    </select>
+    <select id="checkEmail" parameterType="String" resultType="int">
+        SELECT count(1) FROM user WHERE email = #{email}
+    </select>
+
+    <select id="loginV2" resultType="User" parameterType="Map">
+        select id,nick_name,phone,sex,birthday,email,head_pic,last_login_time from user
+        where email = #{email} AND pwd = #{pwd}
+    </select>
+
+    <update id="updateUserPhone" parameterType="map">
+        update user set phone = #{phone}
+        where id = #{userId}
+    </update>
+
+    <update id="updateUserBirthday">
+        update user set birthday = #{birthday}
+        where id = #{userId}
+    </update>
+</mapper>

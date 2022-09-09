@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.UserSignMapper">
+
+    <insert id="addUserSign" parameterType="int">
+        INSERT INTO user_sign(user_id,sign_time)
+        VALUES (#{userId},now())
+    </insert>
+
+    <select id="getUserSign" parameterType="int" resultType="int">
+        SELECT count(1) FROM user_sign WHERE user_id = #{userId} AND sign_time = DATE_FORMAT(NOW(),'%Y-%m-%d')
+    </select>
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.CinemaHallSeatMapper">
+
+    <select id="findSeatInfo" parameterType="int" resultType="CinemaHallSeatVo">
+        select row,seat,status
+        from cinema_hall_seat where hall_id = #{hallId}
+    </select>
+
+    <update id="updateSeatStatus" parameterType="Map">
+        update cinema_hall_seat SET status = #{status}
+        where hall_id =#{hallId} and row = #{row} and seat = #{seat}
+    </update>
+
+
+</mapper>

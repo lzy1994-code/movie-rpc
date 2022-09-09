@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.MovieCommentReplyMapper">
+    <select id="findAllCommentReply" parameterType="int" resultType="MovieCommentReplyVo">
+        select t1.reply_userId,t1.reply_content,t1.reply_time,t2.nick_name as replyUserName,t2.head_pic as replyHeadPic
+        from movie_comment_reply t1,user t2
+        where t1.reply_userId=t2.id
+        and comment_id = #{commentId}
+        order by t1.reply_time DESC
+        limit #{index},#{count}
+    </select>
+    <select id="findCommentReplyTotal" parameterType="int" resultType="int">
+        select count(*) from movie_comment_reply where comment_id = #{commentId}
+    </select>
+    <insert id="addCommentReply" parameterType="MovieCommentReply">
+        insert into movie_comment_reply (`comment_id`, `reply_userId`, `reply_content`, `reply_time`)
+        VALUES (#{commentId},#{replyUserId},#{replyContent},#{replyTime})
+    </insert>
+    <select id="findCommentReplyById" resultType="MovieCommentReply" parameterType="int">
+        select * from movie_comment_reply where comment_id = #{commentId} and reply_userId = #{replyUserId}
+    </select>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.MoviesMapper">
+
+    <select id="findHotMovieList" resultType="MovieVo" parameterType="Map">
+        SELECT t1.id,t1.name,t1.summary,t1.image_url,t2.rank
+        FROM movies t1,movies_hot t2
+        WHERE t1.id = t2.movie_id AND t1.id = t2.movie_id
+        ORDER BY t2.rank ASC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findReleaseMovieList" resultType="MovieVo" parameterType="Map">
+        SELECT id,name,summary,image_url,release_time
+        FROM movies
+        WHERE release_time &lt;= now()
+        ORDER BY release_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findComingSoonMovieList" resultType="MovieVo" parameterType="Map">
+        SELECT id,name,summary,image_url,release_time
+        FROM movies
+        WHERE release_time &gt;= now()
+        ORDER BY release_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findMoviesById" resultType="Movies" parameterType="int">
+        SELECT id,name,summary,duration,place_origin,director,starring,image_url,fare,score
+        FROM movies
+        WHERE id = #{movieId}
+    </select>
+
+    <select id="findMovieListByUserId" parameterType="int" resultType="MovieListVo">
+        SELECT t1.id,t1.name,t1.summary,t1.image_url,t1.release_time
+        FROM movies as t1,user_follow_movie as t2
+        WHERE t1.id = t2.movie_id AND t2.user_id = #{userId}
+    </select>
+
+    <select id="findMoviePageList" parameterType="int" resultType="MovieListVo">
+        SELECT t1.id,t1.name,t1.summary,t1.image_url,t1.release_time
+        FROM movies as t1,user_follow_movie as t2
+        WHERE t1.id = t2.movie_id AND t2.user_id = #{userId}
+        ORDER BY t2.create_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findMovieType" parameterType="int" resultType="String">
+        SELECT t1.name
+        FROM movie_type as t1,movie_type_relation as t2
+        WHERE t1.id = t2.movie_type_id AND t2.movie_id = #{movieId}
+    </select>
+
+    <select id="findMoviesByIds" parameterType="List" resultType="MovieListVo">
+        SELECT id,name,summary,duration,image_url,fare,release_time
+        FROM movies
+        WHERE id IN
+        <foreach collection="list" item="temp" open="(" close=")" separator=",">
+            ${temp}
+        </foreach>
+        ORDER BY release_time DESC
+    </select>
+
+    <select id="findSoonMovieByCinemaId" parameterType="int" resultType="MovieListVo">
+        SELECT t1.id,t1.name,t1.summary,t1.duration,t1.place_origin,t1.fare,t1.image_url,t1.release_time
+        FROM movies t1,movie_schedule t2
+        where t1.id = t2.movie_id and t1.release_time &gt;= now() and t2.cinemas_id = #{cinemaId}
+    </select>
+
+    <select id="findHotMovieInfoList" resultType="MovieInfoVo" parameterType="Map">
+        SELECT t1.id as movieId,t1.name,t1.image_url,t1.horizontal_image,t1.score,t1.director,t1.starring
+        FROM movies t1,movies_hot t2
+        WHERE t1.id = t2.movie_id
+        ORDER BY t2.rank ASC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findReleaseMovieInfoList" resultType="MovieInfoVo" parameterType="Map">
+        SELECT id as movieId,name,image_url,score,director,starring
+        FROM movies
+        WHERE release_time &lt;= now()
+        ORDER BY release_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findComingSoonMovieInfoList" parameterType="Map" resultType="ComingSoonMovieVo">
+        SELECT id as movieId,name,image_url,score,release_time
+        FROM movies
+        WHERE release_time &gt;= now()
+        ORDER BY release_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findMovieDetailById" parameterType="int" resultType="MovieDetailVo">
+        select id as movieId,name,summary,duration,place_origin,image_url,release_time,score
+        FROM movies
+        where id = #{movieId}
+    </select>
+
+    <select id="findCinemasInfo" parameterType="Map" resultType="CinemaVo">
+        select t2.id as cinemaId,t2.name,t2.address,t2.logo
+        from movie_schedule t1
+        left join cinemas t2 on t1.cinemas_id = t2.id
+        left join cinema_region_relation t3 on t1.cinemas_id = t3.cinema_id
+        where t1.movie_id = #{movieId} and t3.region_id = #{regionId}
+        group by t2.name
+        limit #{index},#{count}
+    </select>
+
+    <select id="findCinemasInfoByDate" parameterType="Map" resultType="CinemaVo">
+        select t2.id as cinemaId,t2.name,t2.address,t2.logo
+        from movie_schedule t1
+        left join cinemas t2 on t1.cinemas_id = t2.id
+        where t1.movie_id = #{movieId}
+        group by t2.name
+        limit #{index},#{count}
+    </select>
+
+    <select id="findCinemasInfoByPrice" parameterType="Map" resultType="CinemaVo">
+        select t2.id as cinemaId,t2.name,t2.address,t2.logo,t3.price
+        from movie_schedule t1
+        left join cinemas t2 on t1.cinemas_id = t2.id
+        left join cinema_movie_price t3 on t1.cinemas_id = t3.cinema_id
+        where t1.movie_id = #{movieId}
+        group by t2.name
+        order by t3.price
+        limit #{index},#{count}
+    </select>
+
+    <select id="findMovieByKeyword" parameterType="Map" resultType="MovieInfoVo">
+        SELECT id as movieId,name,image_url,score,director,starring
+        FROM movies
+        where name like concat('%',#{keyword},'%')
+        ORDER BY create_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findMyMovieCommentList" parameterType="Map" resultType="MyMovieCommentVo">
+        select t2.id movieId,t2.name movieName,t2.director,t2.starring,t2.image_url,t2.score
+        movieSocre,t1.comment_content myCommentContent,t1.score myCommentScore,t1.comment_time
+        from movie_comment t1,movies t2
+        where t1.movie_id = t2.id and t1.comment_userId = #{userId}
+        ORDER BY t1.comment_time DESC
+        limit #{index},#{count}
+    </select>
+
+</mapper>

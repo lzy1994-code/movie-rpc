@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.CinemaHallMapper">
+
+    <select id="findCinemaHallById" parameterType="int" resultType="CinemaHall">
+        select cinema_id, screening_hall from cinema_hall where id = #{hallId}
+    </select>
+
+    <select id="findHallId" resultType="CinemaHall" parameterType="Map">
+        select id, cinema_id, screening_hall from cinema_hall
+        where cinema_id = #{cinemaId} and screening_hall=#{screeningHall}
+    </select>
+
+</mapper>

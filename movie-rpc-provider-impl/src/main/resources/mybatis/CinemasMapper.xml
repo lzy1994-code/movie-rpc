@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.CinemasMapper">
+
+    <select id="findFollowCinemas" parameterType="int" resultType="CinemasVo">
+        SELECT t1.id,t1.name,t1.address,t1.logo,t1.longitude,t1.latitude
+        FROM cinemas as t1,user_follow_cinema as t2
+        WHERE t1.id = t2.cinema_id AND t2.user_id = #{userId}
+        ORDER BY t2.create_time DESC
+    </select>
+
+    <select id="findRecommendCinemas" resultType="CinemasVo" parameterType="Map">
+        SELECT t1.id,t1.name,t1.address,t1.logo,t1.longitude,t1.latitude
+        FROM cinemas as t1,cinema_recommend as t2
+        WHERE t1.id = t2.cinema_id
+        ORDER BY t2.rank ASC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findCinemaInfo" resultType="CinemasVo" parameterType="int">
+        SELECT id,name,address,phone,business_hours_content,vehicle_route,logo,label
+        FROM cinemas
+        WHERE id = #{cinemaId}
+    </select>
+
+    <select id="findAllCinemas" parameterType="Map" resultType="CinemasVo">
+        SELECT id,name,address,logo
+        FROM cinemas
+        where name like concat('%',#{cinemaName},'%')
+        ORDER BY create_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findCinemaListByUserId" parameterType="int" resultType="CinemasVo">
+        SELECT t1.id,t1.name,t1.address,t1.logo
+        FROM cinemas as t1,user_follow_cinema as t2
+        WHERE t1.id = t2.cinema_id AND t2.user_id = #{userId}
+        ORDER BY t2.create_time DESC
+    </select>
+
+    <select id="findCinemaPageList" parameterType="Map" resultType="CinemasVo">
+        SELECT t1.id,t1.name,t1.address,t1.logo
+        FROM cinemas as t1,user_follow_cinema as t2
+        WHERE t1.id = t2.cinema_id AND t2.user_id = #{userId}
+        ORDER BY t2.create_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findCinemasByIds" parameterType="List" resultType="CinemasVo">
+        SELECT id,name,address,logo
+        FROM cinemas
+        WHERE id IN
+        <foreach collection="list" item="temp" open="(" close=")" separator=",">
+            ${temp}
+        </foreach>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="findNearbyCinemaList" resultType="CinemasVo">
+        SELECT id,name,address,logo,longitude,latitude FROM cinemas
+    </select>
+
+    <select id="findCinemaByRegion" resultType="Cinemas" parameterType="int">
+        select t1.id,t1.name FROM cinemas t1,cinema_region_relation t2
+        where t1.id = t2.cinema_id and t2.region_id = #{regionId}
+    </select>
+
+    <select id="findMyCinemaCommentList" resultType="MyCinemaCommentVo" parameterType="Map">
+        select t2.id cinemaId,t2.name cinemaName,t2.address, t2.logo,t2.longitude,t2.latitude,t1.comment_content
+        myCommentContent,t1.comment_time
+        from cinema_comment t1,cinemas t2
+        where t1.cinema_id = t2.id and t1.comment_userId = #{userId}
+        ORDER BY t1.comment_time DESC
+        limit #{index},#{count}
+    </select>
+
+    <select id="findCinemasByName" parameterType="Map" resultType="Cinemas">
+        SELECT id,name,address,logo,longitude,latitude FROM cinemas where name = #{name}
+    </select>
+
+</mapper>

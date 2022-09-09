@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.UserFollowMovieMapper">
+
+    <select id="findFollowMovie" parameterType="Map" resultType="int">
+        SELECT count(1) FROM user_follow_movie
+        WHERE user_id = #{userId} AND movie_id = #{movieId}
+    </select>
+
+    <select id="findFollowMovieList" parameterType="int" resultType="UserFollowMovieVo">
+        SELECT t1.movie_id,t2.name,t2.image_url,t2.starring,t2.director,t2.score
+        from user_follow_movie t1, movies t2
+        where t1.movie_id = t2.id and
+        t1.user_id = #{userId}
+        limit #{index},#{count}
+    </select>
+
+    <insert id="followMovie" parameterType="Map">
+        INSERT INTO user_follow_movie(user_id,movie_id)
+        VALUES (#{userId},#{movieId})
+    </insert>
+
+    <delete id="cancelFollowMovie" parameterType="Map">
+        DELETE FROM user_follow_movie
+        WHERE user_id = #{userId} AND movie_id = #{movieId}
+    </delete>
+
+</mapper>

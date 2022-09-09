@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.UserIntegralMapper">
+
+    <select id="getUserIntegralByUserId" parameterType="int" resultType="UserIntegral">
+        SELECT id,user_id,balance,update_time FROM user_integral WHERE user_id = #{userId}
+    </select>
+
+    <insert id="addUserIntegral" parameterType="Map">
+        INSERT INTO user_integral(user_id,balance,update_time)
+        VALUES (#{userId},#{integral},now())
+    </insert>
+
+    <update id="updateUserIntegral" parameterType="Map">
+        UPDATE user_integral
+        SET balance = balance + #{integral},update_time = now()
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

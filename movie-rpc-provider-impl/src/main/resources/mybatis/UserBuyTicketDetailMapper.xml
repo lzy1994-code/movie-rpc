@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.UserBuyTicketDetailMapper">
+
+    <insert id="addUserBuyTicketDetail" parameterType="UserBuyTicketDetail">
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO user_buy_ticket_detail (`record_id`, `exchange_code`, `expired_time`, `status`, `create_time`)
+        VALUES (#{recordId}, #{exchangeCode}, #{expiredTime}, #{status},#{createTime})
+    </insert>
+
+    <select id="findSeenMovie" resultType="UserSeenMovieRecordVo" parameterType="int">
+        select t1.id as recordId,t3.id as movieId,t4.id as cinemaId,t3.image_url,t1.movie_name,t1.begin_time,t1.end_time
+        from user_buy_ticket_record t1,user_buy_ticket_detail t2,movies t3,cinemas t4
+        where t1.id = t2.record_id
+        and t2.status = 2
+        and t1.movie_name = t3.name
+        and t1.cinema_name = t4.name
+        and t1.user_id = #{userId}
+    </select>
+
+    <select id="findMyMovieTicket" parameterType="Map" resultType="UserBuyTicketRecord">
+        select t1.id,t1.screening_hall,t1.seat,t1.movie_name,t1.cinema_name,t1.begin_time,t1.end_time,t1.create_time
+        from user_buy_ticket_record t1 ,user_buy_ticket_detail t2
+        where t1.id = t2.record_id and t2.status = 1 and t1.user_id = #{userId}
+    </select>
+
+    <select id="findExchangeCode" resultType="UserBuyTicketDetail" parameterType="Map">
+        select exchange_code from user_buy_ticket_detail where record_id = #{id}
+    </select>
+
+    <update id="updateStatus" parameterType="Map">
+        update user_buy_ticket_detail set status = 2 where record_id = #{id}
+    </update>
+
+    <select id="findSeenMovieComment" parameterType="Map" resultType="MySeenMovieCommentVo">
+        select t2.id as movieId,t3.id as cinemaId,t1.movie_name,t1.cinema_name
+        from user_buy_ticket_record t1
+        left join movies t2 on t2.name = t1.movie_name
+        left join cinemas t3 on t3.name = t1.cinema_name
+        where t1.user_id = #{userId} and t1.id = #{recordId}
+    </select>
+
+</mapper>

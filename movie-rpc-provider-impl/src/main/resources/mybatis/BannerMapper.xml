@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.BannerMapper">
+
+    <select id="bannerShow" resultType="BannerVo">
+        select image_url,jump_url,rank from banner where start_time &lt;= now() and end_time &gt;= now() ORDER BY rank
+        ASC
+    </select>
+
+</mapper>

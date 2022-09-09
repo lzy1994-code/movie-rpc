@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.movie.dao.CinemaCommentGreatMapper">
+
+    <select id="getCinemaGreatNum" parameterType="int" resultType="int">
+        select count(*) from cinema_comment_great where comment_id = #{commentId} and user_id != ""
+    </select>
+    <insert id="saveCinemaCommentGreat" parameterType="CinemaCommentGreat">
+        insert into cinema_comment_great (comment_id, user_id) values (#{commentId},#{userId})
+    </insert>
+    <select id="whetherCinemaGreat" parameterType="int" resultType="int">
+        select count(1) from cinema_comment_great where comment_id = #{commentId} and user_id = #{userId}
+    </select>
+
+    <select id="findCinemaCommentGreat" parameterType="int" resultType="CinemaCommentGreatVo">
+        select t2.head_pic as greatHeadPic
+        from cinema_comment_great t1,user t2
+        where t1.user_id = t2.id
+        and comment_id = #{commentId}
+        limit #{index},#{count}
+    </select>
+
+</mapper>
