@@ -7,9 +7,6 @@ import com.bw.movie.rpc.pojo.*;
 import com.bw.movie.rpc.vo.*;
 import com.bw.movie.service.*;
 import com.bw.movie.utils.*;
-import com.bw.pay.client.api.WeChatRpcService;
-import com.bw.pay.client.pojo.ProductConstants;
-import com.bw.pay.client.pojo.WxLoginVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -45,9 +42,6 @@ public class UserRpcServiceImpl implements UserRpcService {
 
     @Resource
     private UserBuyTicketRecordService userBuyTicketRecordService;
-
-    @Resource
-    private WeChatRpcService weChatRpcService;
 
     @Resource
     private UserBindingLoginService userBindingLoginService;
@@ -300,10 +294,10 @@ public class UserRpcServiceImpl implements UserRpcService {
     @Override
     public int updateUserPwd(int userId, String newPwd, String oldPwd) {
         int num = userService.updateUserPwd(userId, newPwd, oldPwd);
-        if (num > 0) {
+      /*  if (num > 0) {
             //给用户推送出票成功的通知
-            MqUtil.sendMsg(Constants.MQ_ANDROID_QUEUES, userId, Constants.SYS_MSG_TITLE, Constants.UPDATE_PWD_CONTENT);
-        }
+          //  MqUtil.sendMsg(Constants.MQ_ANDROID_QUEUES, userId, Constants.SYS_MSG_TITLE, Constants.UPDATE_PWD_CONTENT);
+        }*/
         systemMessagesService.addSysMsgs(userId, Constants.SYS_MSG_TITLE, Constants.UPDATE_PWD_CONTENT);
         return num;
     }
@@ -318,7 +312,7 @@ public class UserRpcServiceImpl implements UserRpcService {
         return userBuyTicketRecordService.findUserBuyTicketRecordList(userId, page, count, status);
     }
 
-    @Override
+  /*  @Override
     public UserLoginVo wxBindingLogin(String code) {
         //根据code获取微信用户的openid
         WxLoginVo wxLogin = weChatRpcService.getOpenId(code, ProductConstants.PRODUCT_MOVIE);
@@ -406,7 +400,7 @@ public class UserRpcServiceImpl implements UserRpcService {
             return 1;
         }
         return 2;
-    }
+    }*/
 
     private UserLoginVo login(int userId) {
         User user = userService.login(userId);

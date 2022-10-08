@@ -3,9 +3,6 @@ package com.bw.movie.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.bw.movie.rpc.pojo.UserMessagePush;
 import com.bw.movie.service.UserMessagePushService;
-import com.bw.mq.pojo.PushData;
-import com.bw.mq.producer.IMqHandler;
-import com.bw.mq.producer.factory.MqHandlerProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +12,7 @@ import java.util.Map;
 /**
  * Created by xyj on 2018/8/13.
  */
-public class MqUtil {
+/*public class MqUtil {
 
     private static Map<String, IMqHandler> mqMap = new HashMap<>();
 
@@ -49,4 +46,4 @@ public class MqUtil {
         }
     }
 
-}
+}*/

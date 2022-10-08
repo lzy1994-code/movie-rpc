@@ -5,7 +5,6 @@ import com.bw.movie.rpc.pojo.*;
 import com.bw.movie.rpc.vo.*;
 import com.bw.movie.service.*;
 import com.bw.movie.utils.*;
-import com.bw.pay.client.api.MoviePayRpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,16 +40,10 @@ public class MovieRpcServiceImpl implements MovieRpcService {
     private CinemaService cinemaService;
 
     @Resource
-    private MoviePayRpcService moviePayRpcService;
-
-    @Resource
     private UserBuyTicketRecordService userBuyTicketRecordService;
 
     @Resource
     private UserService userService;
-
-    @Resource
-    private UserMessagePushService userMessagePushService;
 
     @Resource
     private SystemMessagesService systemMessagesService;
@@ -135,7 +128,7 @@ public class MovieRpcServiceImpl implements MovieRpcService {
         return movieScheduleService.findMovieScheduleList(movieId, cinemasId);
     }
 
-    @Override
+  /*  @Override
     public String buyMovieTicket(int userId, int scheduleId, int amount, String sign) {
         //查询排期场次信息
         MovieSchedule movieSchedule = movieScheduleService.findMovieScheduleById(scheduleId);
@@ -220,7 +213,7 @@ public class MovieRpcServiceImpl implements MovieRpcService {
         }
         String pay = moviePayRpcService.pay(orderId, payType, ip);
         return pay;
-    }
+    }*/
 
     @Override
     public String ticketing(String orderId) {
@@ -252,7 +245,7 @@ public class MovieRpcServiceImpl implements MovieRpcService {
 
             //给用户推送出票成功的通知
             String content = String.format(Constants.EMAIL_CONTENT, buyTicketRecord.getMovieName(), buyTicketRecord.getBeginTime(), buyTicketRecord.getEndTime());
-            MqUtil.sendMsg(Constants.MQ_ANDROID_QUEUES, buyTicketRecord.getUserId(), Constants.PUSH_TICKETING_TITLE, content);
+           // MqUtil.sendMsg(Constants.MQ_ANDROID_QUEUES, buyTicketRecord.getUserId(), Constants.PUSH_TICKETING_TITLE, content);
 
             logger.info("orderId={}出票成功", orderId);
 
@@ -388,7 +381,7 @@ public class MovieRpcServiceImpl implements MovieRpcService {
         return movieService.findMovieByKeyword(keyword, page, count);
     }
 
-    @Override
+   /* @Override
     public String buyMovieTickets(int userId, int scheduleId, String seat, int amount) {
         //查询排期场次信息
         MovieSchedule movieSchedule = movieScheduleService.findMovieScheduleById(scheduleId);
@@ -448,7 +441,7 @@ public class MovieRpcServiceImpl implements MovieRpcService {
         MqUtil.sendMsg(Constants.MQ_ANDROID_QUEUES, userId, Constants.SYS_MSG_TITLE, Constants.BUY_MOVIETICKET_CONTENT);
         return orderId;
 
-    }
+    }*/
 
     @Override
     public String outTicket(String orderId) throws Exception {

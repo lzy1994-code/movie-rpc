@@ -108,7 +108,7 @@ public interface MovieRpcService {
      * @param sign
      * @return
      */
-    String buyMovieTicket(int userId, int scheduleId, int amount, String sign);
+   // String buyMovieTicket(int userId, int scheduleId, int amount, String sign);
 
     /**
      * 支付
@@ -118,7 +118,7 @@ public interface MovieRpcService {
      * @param ip
      * @return
      */
-    String pay(String orderId, int payType, String ip);
+ //   String pay(String orderId, int payType, String ip);
 
     /**
      * 出票
@@ -317,7 +317,7 @@ public interface MovieRpcService {
     /**
      * 2.0 购票
      */
-    String buyMovieTickets(int userId, int scheduleId, String seat, int amount);
+   // String buyMovieTickets(int userId, int scheduleId, String seat, int amount);
 
     /**
      * 2.0 生成兑换码

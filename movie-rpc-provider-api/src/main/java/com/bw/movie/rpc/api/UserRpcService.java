@@ -98,7 +98,7 @@ public interface UserRpcService {
      * @param code
      * @return
      */
-    UserLoginVo wxBindingLogin(String code);
+ //   UserLoginVo wxBindingLogin(String code);
 
     /**
      * 已注册账号绑定微信账号
@@ -107,7 +107,7 @@ public interface UserRpcService {
      * @param code
      * @return
      */
-    int bindWeChat(int userId, String code);
+ //   int bindWeChat(int userId, String code);
 
     /**
      * 是否绑定微信
@@ -115,7 +115,7 @@ public interface UserRpcService {
      * @param userId
      * @return
      */
-    int whetherToBindWeChat(int userId);
+   // int whetherToBindWeChat(int userId);
 
     /**
      * 2.0 发送邮箱验证码
